@@ -63,7 +63,7 @@
 
 <model-viewer
   id="mv"
-  src="./horse.glb"
+  src="./horse.gltf"
   camera-controls
   autoplay
   shadow-intensity="1"
@@ -113,7 +113,7 @@
   // Ошибка загрузки
   mv.addEventListener('error', (e) => {
     console.error('❌ Ошибка загрузки:', e);
-    alert('Модель не загрузилась!\n\nПроверь:\n1. Запуск через сервер\n2. Путь к horse.glb');
+    alert('Модель не загрузилась!\n\nПроверь:\n1. Запуск через сервер\n2. Путь к horse.gltf');
   });
 
   function playAnimation(index) {
