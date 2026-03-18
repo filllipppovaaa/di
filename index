@@ -1,0 +1,159 @@
+// Функция переключения контура
+function toggleOutline() {
+  if (outlineEffect) {
+    if (isOutlineActive) {
+      outlineEffect.setAttribute('blend-mode', 'skip');
+      isOutlineActive = false;
+      outlineBtn.classList.remove('active');
+      console.log('🔴 Outline OFF');
+    } else {
+      outlineEffect.setAttribute('blend-mode', 'default');
+      isOutlineActive = true;
+      outlineBtn.classList.add('active');
+      console.log('🟢 Outline ON');
+    }
+  }
+}
+
+// Функция переключения пикселизации
+function togglePixel() {
+  if (pixelEffect) {
+    if (isPixelActive) {
+      pixelEffect.setAttribute('blend-mode', 'skip');
+      isPixelActive = false;
+      pixelBtn.classList.remove('active');
+      pixelBtn.innerHTML = '🔳 Пикселизация';
+      console.log('📷 Pixel OFF');
+    } else {
+      pixelEffect.setAttribute('blend-mode', 'default');
+      pixelEffect.setAttribute('granularity', isMobile ? '20' : '15');
+      isPixelActive = true;
+      pixelBtn.classList.add('active');
+      pixelBtn.innerHTML = '✅ Пикселизация';
+      console.log('📷 Pixel ON');
+    }
+  }
+}
+
+// Ждем загрузки модели лошади
+mv.addEventListener('load', () => {
+  console.log('✅ Horse model loaded successfully');
+  
+  // Получаем анимации для лошади
+  try {
+    animations = mv.availableAnimations || [];
+    console.log('📊 Available horse animations:', animations);
+    
+    if (animations.length >= 1) {
+      mv.animationName = animations[0];
+      mv.play();
+      
+      // Обновляем названия кнопок в зависимости от анимаций
+      updateButtonNames();
+    }
+  } catch (e) {
+    console.error('Error getting horse animations:', e);
+  }
+});
+
+mv.addEventListener('error', (error) => {
+  console.error('❌ Horse model loading error:', error);
+});
+
+// Функция для обновления названий кнопок
+function updateButtonNames() {
+  // Кнопка 1
+  if (animations.length >= 1) {
+    btn1.innerHTML = getAnimationDisplayName(animations[0]);
+  }
+  
+  // Кнопка 2
+  if (animations.length >= 2) {
+    btn2.innerHTML = getAnimationDisplayName(animations[1]);
+  }
+}
+
+// Функция для получения понятного названия анимации
+function getAnimationDisplayName(animationName) {
+  const name = animationName.toLowerCase();
+  
+  // Определяем тип анимации лошади
+  if (name.includes('idle') || name.includes('stand') || name.includes('стой')) {
+    return '🐴 Стояние';
+  } else if (name.includes('walk') || name.includes('ходьб') || name.includes('шаг')) {
+    return '🚶 Шаг';
+  } else if (name.includes('trot') || name.includes('рысь')) {
+    return '🏃 Рысь';
+  } else if (name.includes('gallop') || name.includes('галоп')) {
+    return '💨 Галоп';
+  } else if (name.includes('run') || name.includes('бег')) {
+    return '🏃‍♂️ Бег';
+  } else if (name.includes('jump') || name.includes('прыж')) {
+    return '🦘 Прыжок';
+  } else if (name.includes('eat') || name.includes('ед') || name.includes('корм')) {
+    return '🌿 Еда';
+  } else if (name.includes('drink') || name.includes('пьет')) {
+    return '💧 Питье';
+  } else if (name.includes('neigh') || name.includes('ржет')) {
+    return '🔊 Ржание';
+  } else if (name.includes('kick') || name.includes('брык')) {
+    return '🦵 Брыкание';
+  }
+  
+  // Если не нашли соответствия, возвращаем исходное название
+  return `🐎 ${animationName}`;
+}
+
+// Кнопка анимации 1
+btn1.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (animations.length >= 1) {
+    mv.animationName = animations[0];
+    mv.currentTime = 0;
+    mv.play();
+    console.log('Playing horse animation:', animations[0]);
+  }
+});
+
+// Кнопка анимации 2
+btn2.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (animations.length >= 2) {
+    mv.animationName = animations[1];
+    mv.currentTime = 0;
+    mv.play();
+    console.log('Playing horse animation:', animations[1]);
+  }
+});
+
+// Кнопка контура
+outlineBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  toggleOutline();
+});
+
+// Кнопка пикселизации
+pixelBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  togglePixel();
+});
+
+// Отладка
+window.debug = {
+  outlineOn: () => outlineEffect?.setAttribute('blend-mode', 'default'),
+  outlineOff: () => outlineEffect?.setAttribute('blend-mode', 'skip'),
+  pixelOn: () => {
+    pixelEffect?.setAttribute('blend-mode', 'default');
+    pixelEffect?.setAttribute('granularity', '20');
+  },
+  pixelOff: () => pixelEffect?.setAttribute('blend-mode', 'skip'),
+  setPixelSize: (size) => pixelEffect?.setAttribute('granularity', size),
+  // Новая функция для просмотра всех анимаций
+  listAnimations: () => console.log('Horse animations:', animations)
+};
+
+})();
+</script>
+
+</body>
+</html>
